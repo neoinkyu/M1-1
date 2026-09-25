@@ -4,6 +4,7 @@ import gspread
 import pandas as pd
 from google.oauth2.service_account import Credentials
 
+import json
 
 # 프로젝트 루트 경로
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -30,7 +31,8 @@ SCOPES = [
 def get_google_sheets_client():
     """
     로컬에서는 service_account.json을 사용하고,
-    Streamlit Cloud에서는 st.secrets를 사용한다.
+    Streamlit Cloud에서는 Secrets에 저장된
+    서비스 계정 JSON 문자열을 사용한다.
     """
 
     # 1. 로컬 개발환경
@@ -47,8 +49,8 @@ def get_google_sheets_client():
         try:
             import streamlit as st
 
-            service_account_info = dict(
-                st.secrets["gcp_service_account"]
+            service_account_info = json.loads(
+                st.secrets["gcp_service_account_json"]
             )
 
             credentials = (
